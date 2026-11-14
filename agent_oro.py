@@ -3,13 +3,13 @@ import yfinance as yf
 from google import genai
 import requests
 
-# 1. Obtener datos del Oro
-data = yf.download("GC=X", period="5d", interval="1d")
+# 1. Obtener datos del Oro usando el ETF GLD (evita errores de tickers de futuros)
+data = yf.download("GLD", period="5d", interval="1d")
 precio_actual = data["Close"].iloc[-1].item()
 
 # 2. Prompt con el reporte técnico y el veredicto operativo obligatorio
 prompt = f"""
-Analiza el precio actual del Oro (GC=X) que es {precio_actual} USD por onza. 
+Analiza el precio actual del Oro a través de su ETF (GLD) que cotiza en {precio_actual} USD. 
 Proporciona un reporte técnico corto para trading que incluya:
 - Tendencia actual en el mercado de metales preciosos.
 - Niveles clave de soporte y resistencia.
@@ -31,8 +31,7 @@ url = f"https://api.telegram.org/bot{token}/sendMessage"
 
 payload = {
     "chat_id": chat_id,
-    "text": f"🪙 **Reporte Oro (GC/USD)**\n\n{analisis}",
+    "text": f"🪙 **Reporte Oro (ETF GLD)**\n\n{analisis}",
     "parse_mode": "Markdown"
 }
 requests.post(url, json=payload)
-
